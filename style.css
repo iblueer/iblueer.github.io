@@ -561,6 +561,13 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 	text-align:center;
 	text-transform:uppercase;
 }
+.statement-bloc-text{
+	line-height:38px;
+	font-style:italic;
+	font-size:28px;
+	text-align:center;
+	font-weight:lighter;
+}
 
 /* = Colour
 -------------------------------------------------------------- */
@@ -573,6 +580,9 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 
 /* Bloc image backgrounds */
 
+.bg-Unknown-8{
+	background-image:url("img/Unknown-8.jpeg");
+}
 
 
 
