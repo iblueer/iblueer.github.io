@@ -10,7 +10,7 @@
 
 miruyo网站将作为舰团【摸索吧！崩坏3】的官方网站。
 
-网站链接：[摸了](http://miruyo.maemo.cc/mobeng.html)
+网站链接：[摸了](https://miruyo.maemo.cc/mobeng.html)
 
 本网站会更新包括但不限于如下计划的动态内容：
 
