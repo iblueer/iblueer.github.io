@@ -74,6 +74,11 @@
         
         setInterval(updateClock, 1000);
         updateClock(); // 立即显示时间
+
+        // 添加点击刷新功能
+        document.addEventListener('click', function() {
+            window.location.reload();
+        });
     </script>
 </body>
 </html>
