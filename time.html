@@ -29,7 +29,7 @@
         
         #clock {
             font-family: Helvetica, Arial, sans-serif;
-            font-size: 48px;
+            font-size: 64px;
             text-align: center;
             z-index: 2;
             position: relative;
@@ -37,7 +37,7 @@
             margin: 0;
             -webkit-backface-visibility: hidden;
             -webkit-transform: translateZ(0);
-            font-weight: 300;
+            font-weight: 200;
         }
         
         .glow-ring {
@@ -69,8 +69,7 @@
             var now = new Date();
             var hours = padZero(now.getHours());
             var minutes = padZero(now.getMinutes());
-            var seconds = padZero(now.getSeconds());
-            document.getElementById('clock').innerHTML = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('clock').innerHTML = hours + ':' + minutes;
         }
         
         setInterval(updateClock, 1000);
