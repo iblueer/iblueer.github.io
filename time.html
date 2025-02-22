@@ -6,8 +6,18 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="时钟">
+    <link rel="apple-touch-icon" href="clock-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="clock-icon-76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="clock-icon-120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="clock-icon-152.png">
+    <!-- <link rel="apple-touch-startup-image" href="clock-startup.png"> -->
     <title>数字时钟</title>
     <style>
+        @font-face {
+            font-family: 'DIN Light';
+            src: url('./fonts/DIN-Light-2.otf') format('opentype');
+        }
+        
         body {
             background-color: #000000;
             color: #ffffff;
@@ -25,11 +35,14 @@
             padding: 40px;
             width: 200px;
             height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         #clock {
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 64px;
+            font-family: 'DIN Light', Helvetica, Arial, sans-serif;
+            font-size: 72px;
             text-align: center;
             z-index: 2;
             position: relative;
@@ -46,11 +59,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            border: 6px solid #00bfff;
+            border: 6px solid #8FE3FF;
             border-radius: 50%;
             z-index: 1;
             -webkit-backface-visibility: hidden;
             -webkit-transform: translateZ(0);
+            -webkit-filter: drop-shadow(0 0 1px #00bfff);
+            filter: drop-shadow(0 0 1px #00bfff);
         }
     </style>
 </head>
