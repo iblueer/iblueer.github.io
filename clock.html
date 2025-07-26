@@ -1,384 +1,260 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="时钟">
-    <title>Smartisan Clock</title>
-
-    <!-- 外部CSS文件链接 -->
-    <link rel="stylesheet" href="./css/style.css">
-
-    <!-- 内部CSS样式 -->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="时钟" />
+    <link rel="apple-touch-icon" href="./img/icons/clock-icon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./img/icons/clock-icon-76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="./img/icons/clock-icon-120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="./img/icons/clock-icon-152.png" />
+    <link rel="apple-touch-startup-image" href="./img/icons/clock-startup.png" />
+    <title>数字时钟</title>
     <style>
-#app {
-  width: 100%;
-  height: 90vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-canvas {
-  width: 300px;
-  height: 300px;
-}
-.tail {
-  width: 100%;
-  padding: 20px 0;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-}
-img {
-  width: 16px;
-  margin-right: 8px;
-}
-p {
-  font-size: 12px;
-  color: #606266;
-  font-weight: 500;
-}
+      @font-face {
+        font-family: "DIN Light";
+        src: url("./fonts/DIN-Light-2.otf") format("opentype");
+      }
 
-@media (max-width: 768px) {
-  canvas {
-    width: 80vw;
-    height: 80vw;
-  }
-}
+      body {
+        background-color: #000000;
+        color: #ffffff;
+        margin: 0;
+        height: 100vh;
+        position: relative;
+      }
+
+      .clock-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        padding: 40px;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .info-line {
+        font-size: 16px;
+        line-height: 20px;
+        height: 20px;
+        margin: 4px 0;
+      }
+
+      #clock {
+        font-family: "DIN Light", Helvetica, Arial, sans-serif;
+        font-size: 72px;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        line-height: 1;
+        margin: 0;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translateZ(0);
+        font-weight: 200;
+      }
+
+      .glow-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 6px solid #8fe3ff;
+        border-radius: 50%;
+        z-index: 1;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translateZ(0);
+        -webkit-filter: drop-shadow(0 0 1px #00bfff);
+        filter: drop-shadow(0 0 1px #00bfff);
+        box-shadow: 0 0 8px rgba(143, 227, 255, 0.3), /* 外发光 */ inset 0 0 8px rgba(143, 227, 255, 0.3); /* 内发光 */
+      }
+
+      /* ring effects */
+      @keyframes breath {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(143, 227, 255, 0.3), inset 0 0 8px rgba(143, 227, 255, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(143, 227, 255, 0.8), inset 0 0 20px rgba(143, 227, 255, 0.8);
+        }
+      }
+
+      .breath {
+        animation: breath 3s ease-in-out infinite;
+      }
+
+      @keyframes rotate3d {
+        0% {
+          transform: rotateX(0deg) rotateY(180deg);
+        }
+        25% {
+          transform: rotateX(45deg) rotateY(135deg);
+        }
+        50% {
+          transform: rotateX(90deg) rotateY(90deg);
+        }
+        75% {
+          transform: rotateX(135deg) rotateY(45deg);
+        }
+        100% {
+          transform: rotateX(180deg) rotateY(0deg);
+        }
+      }
+
+      .rotate3d {
+        animation: rotate3d 6s linear infinite;
+        transform-origin: 50% 50%;
+        backface-visibility: visible; /* 让背面也显示出来 */
+      }
+
+      .menu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 10px;
+        font-size: 16px;
+        display: none;
+      }
+
+      .menu.show {
+        display: block;
+      }
+
+      .menu label,
+      .menu button,
+      .menu select {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+      }
+
+      .progress-ring {
+        border-radius: 50%;
+        border: 6px solid #8fe3ff;
+        box-shadow: 0 0 8px rgba(143, 227, 255, 0.3), inset 0 0 8px rgba(143, 227, 255, 0.3);
+      }
     </style>
-</head>
-<body>
-    <!-- 页面内容写在这里 -->
-    <div id="app">
-      <canvas id="clock"></canvas>
-    
-      <div class="tail">
-        <img src="data:image/png;base64,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" alt="">
-        <p>Designed by Smartisan</p>
-      </div>
+  </head>
+  <body>
+    <div class="clock-container">
+      <div id="date" class="info-line"></div>
+      <div id="clock"></div>
+      <div id="week" class="info-line"></div>
+      <div class="glow-ring" id="ring"></div>
     </div>
 
-    <!-- 外部JavaScript文件链接 -->
-    <script src="./js/main.js"></script>
+    <div id="menu" class="menu">
+      <label
+        >圆环效果:
+        <select id="ringEffect">
+          <option value="none">无</option>
+          <option value="breath">呼吸</option>
+          <option value="rotate3d">立体旋转</option>
+          <option value="second">秒钟进度</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="toggleSeconds" /> 是否显示秒钟？</label>
+      <label><input type="checkbox" id="toggleDate" /> 是否显示日期？</label>
+      <label><input type="checkbox" id="toggleWeek" /> 是否显示星期？</label>
+      <button id="refresh">刷新页面</button>
+      <button id="about">关于作者</button>
+    </div>
 
-    <!-- 内部JavaScript代码 -->
     <script>
-/**
- * Canvas 类
- */
-function Canvas(options) {
-  var self = this;
-  var radio = options.radio;
-  
-  this.canvas = null;
-  this.ctx = null;
-  this.width = 300;
-  this.height = 150;
-  this.center = [this.width / 2, this.height / 2];
-  this.radio = radio || 1;
+      function padZero(num) {
+        return num < 10 ? "0" + num : num;
+      }
 
-  this.init(options);
-}
+      var showSeconds = false;
+      var showDate = false;
+      var showWeek = false;
 
-Canvas.prototype.init = function(options) {
-  var canvas = options.canvas;
-  var width = options.width;
-  var height = options.height;
-  
-  if (!canvas) return;
-  this.canvas = typeof canvas === 'string' ? document.getElementById(canvas) : canvas;
-  if (!this.canvas.getContext) return;
-  this.ctx = this.canvas.getContext('2d');
+      function updateClock() {
+        var now = new Date();
+        var hours = padZero(now.getHours());
+        var minutes = padZero(now.getMinutes());
+        var seconds = padZero(now.getSeconds());
+        var timeStr = hours + ":" + minutes + (showSeconds ? ":" + seconds : "");
+        document.getElementById("clock").innerHTML = timeStr;
 
-  width *= this.radio;
-  height *= this.radio;
-  this.setSize({ width: width, height: height });
-};
+        if (showDate) {
+          var dateStr = now.getFullYear() + "-" + padZero(now.getMonth() + 1) + "-" + padZero(now.getDate());
+          document.getElementById("date").innerHTML = dateStr;
+        } else {
+          document.getElementById("date").innerHTML = "";
+        }
 
-Canvas.prototype.setSize = function(data) {
-  var width = data.width;
-  var height = data.height;
-  this.width = width || this.width;
-  this.height = height || this.height;
-  this.center = [this.width / 2, this.height / 2];
-  this.canvas.width = this.width;
-  this.canvas.height = this.height;
-};
+        if (showWeek) {
+          var weekArr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+          document.getElementById("week").innerHTML = weekArr[now.getDay()];
+        } else {
+          document.getElementById("week").innerHTML = "";
+        }
 
-Canvas.prototype.clear = function(style) {
-  this.ctx.save();
-  if (style) {
-    this.ctx.fillStyle = style;
-    this.ctx.fillRect(0, 0, this.width, this.height);
-  } else {
-    this.ctx.clearRect(0, 0, this.width, this.height);
-  }
-  this.ctx.restore();
-};
+        if (currentEffect === "second") {
+          var angle = ((now.getSeconds() + now.getMilliseconds() / 1000) / 60) * 360;
+          ring.style.background = "conic-gradient(#8FE3FF " + angle + "deg, rgba(143,227,255,0.1) 0deg)";
+          ring.style.border = "none";
+          ring.classList.add("progress-ring");
+        }
+      }
 
-/**
- * Clock 类
- * 属性:
- * 方法:
- */
-function Clock(options) {
-  var Canvas = options.Canvas;
-  var radio = Canvas.radio;
-  this.Canvas = Canvas;
+      setInterval(updateClock, 1000);
+      updateClock();
 
-  this.GRAY_MAIN = 'rgb(97, 97, 97)';
-  this.GRAY_BORDER = 'rgb(88, 88, 88)';
-  this.RED_MAIN = 'rgb(199, 78, 81)';
-  this.RED_CIRCLE = 'rgb(182, 72, 74)';
+      var menu = document.getElementById("menu");
+      var ring = document.getElementById("ring");
+      var currentEffect = "none";
 
-  // 指针样式
-  this.POINTER_H = {
-    l0: 0, // 反向长度, 值为表盘直径的占比.
-    l1: 0.2, // 指针长度
-    r0: 0.025, // 指针尾端半径
-    r1: 0.025, // 指针尖端半径
-    rgb: this.GRAY_MAIN, // 指针颜色
-    rgb_b: this.GRAY_BORDER, // 指针边框颜色
-  };
-  this.POINTER_M = {
-    l0: 0,
-    l1: 0.25,
-    r0: 0.0215,
-    r1: 0.0215,
-    rgb: this.GRAY_MAIN,
-    rgb_b: this.GRAY_BORDER,
-  };
-  this.POINTER_S = {
-    l0: 0.06,
-    l1: 0.35,
-    r0: 0.0028,
-    r1: 0.0015,
-    rgb: this.RED_MAIN,
-    rgb_b: this.RED_MAIN,
-  };
+      document.body.addEventListener("click", function (e) {
+        if (menu.contains(e.target)) return;
+        menu.classList.toggle("show");
+      });
 
-  // 指针上实心圆样式 - 时针/分针
-  this.CIRCLE_0 = {
-    r: 0.036, // 半径
-    rgb: this.GRAY_MAIN, // 填充颜色
-    rgb_b: this.GRAY_BORDER, // 边框颜色
-  };
-  // 指针上实心圆样式 - 秒针
-  this.CIRCLE_1 = {
-    r: 0.016,
-    rgb: this.RED_CIRCLE,
-    rgb_b: this.RED_CIRCLE,
-  };
-
-  this.SHADOW = {
-    blur: 8 * radio,
-    color: 'rgba(0, 0, 0, 0.2)',
-    x: 3 * radio,
-    y: 6 * radio,
-  };
-
-  this.refrash();
-}
-
-Clock.prototype.drawCircle = function() {
-  var ctx = this.Canvas.ctx;
-  var width = this.Canvas.width;
-  var height = this.Canvas.height;
-  var radio = this.Canvas.radio;
-  
-  var SHADOW = {
-    blur: 10 * radio,
-    color: 'rgba(0, 0, 0, 0.1)',
-    x: 2 * radio,
-    y: 3 * radio
-  };
-
-  var R1 = 0.4; // 内表盘半径
-  var R2 = 0.45; // 最大半径
-  var R3 = 0.32; // 数字所在位置半径
-  var FONT_SIZE = 0.06;
-  ctx.save();
-  ctx.translate(width / 2, height / 2);
-
-  // 内表盘
-  ctx.fillStyle = '#fafafa';
-  ctx.beginPath();
-  ctx.arc(0, 0, R1 * width, 0, 2 * Math.PI);
-  ctx.fill();
-
-  // 边框
-  ctx.lineWidth = (R2 - R1) * width;
-  ctx.strokeStyle = 'white';
-  this.shadow(SHADOW);
-  ctx.beginPath();
-  ctx.arc(0, 0, ((R2 + R1) / 2) * width, 0, 2 * Math.PI);
-  ctx.stroke();
-
-  // 边框描边
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = '#e0e0e0';
-  this.shadow(null);
-  ctx.beginPath();
-  ctx.arc(0, 0, R2 * width, 0, 2 * Math.PI);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(0, 0, R1 * width, 0, 2 * Math.PI);
-  ctx.stroke();
-
-  // 数字
-  ctx.fillStyle = this.GRAY_MAIN;
-  ctx.font = '600 ' + (FONT_SIZE * width) + 'px SimHei, STheiti';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('12', 0, -R3 * width);
-  ctx.textAlign = 'start';
-  ctx.fillText('3', R3 * width, 0);
-
-  ctx.restore();
-};
-
-// 绘制所有指针
-Clock.prototype.drawPointer = function() {
-  var ctx = this.Canvas.ctx;
-  var width = this.Canvas.width;
-  var height = this.Canvas.height;
-  var date = new Date();
-  var h = date.getHours() % 12;
-  var m = date.getMinutes();
-  var s = date.getSeconds();
-  var h_deg = ((m / 60 + h) / 12) * 2 * Math.PI;
-  var m_deg = ((s / 60 + m) / 60) * 2 * Math.PI;
-  var s_deg = (s / 60) * 2 * Math.PI;
-
-  ctx.save();
-  ctx.translate(width / 2, height / 2);
-  this.shadow(this.SHADOW); // 阴影
-  this.pointer(this.POINTER_H, h_deg); // 时针
-  this.pointer(this.POINTER_M, m_deg); // 分针
-  this.circle(this.CIRCLE_0); // 大圆盘
-  this.pointer(this.POINTER_S, s_deg); // 秒针
-  this.circle(this.CIRCLE_1); // 小圆盘
-  ctx.restore();
-};
-
-/**
- * 绘制指针
- * @param {Object} P 指针尺寸，颜色
- * @param {Number} deg 指针角度（起点为 12 点钟方向）
- */
-Clock.prototype.pointer = function(P, deg) {
-  var ctx = this.Canvas.ctx;
-  var width = this.Canvas.width;
-  ctx.save();
-  ctx.rotate(deg - Math.PI / 2);
-  ctx.lineWidth = this.Canvas.radio;
-  ctx.strokeStyle = P.rgb_b;
-  ctx.fillStyle = P.rgb;
-  ctx.beginPath();
-  ctx.moveTo(-P.l0 * width, -P.r0 * width);
-  ctx.lineTo(P.l1 * width, -P.r1 * width);
-  ctx.arc(P.l1 * width, 0, P.r1 * width, -0.5 * Math.PI, 0.5 * Math.PI);
-  ctx.lineTo(P.l0 * width, P.r0 * width);
-  ctx.arc(-P.l0 * width, 0, P.r0 * width, 0.5 * Math.PI, 1.5 * Math.PI);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-  ctx.restore();
-};
-
-/**
- * 绘制实心圆
- * @param {Object} C 圆尺寸，颜色
- */
-Clock.prototype.circle = function(C) {
-  var ctx = this.Canvas.ctx;
-  var width = this.Canvas.width;
-  ctx.save();
-  ctx.lineWidth = this.Canvas.radio;
-  ctx.strokeStyle = C.rgb_b;
-  ctx.fillStyle = C.rgb;
-  ctx.beginPath();
-  ctx.arc(0, 0, C.r * width, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.stroke();
-  ctx.restore();
-};
-
-Clock.prototype.shadow = function(data) {
-  var ctx = this.Canvas.ctx;
-  if (!data) {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-  } else {
-    ctx.shadowBlur = data.blur;
-    ctx.shadowColor = data.color;
-    ctx.shadowOffsetX = data.x;
-    ctx.shadowOffsetY = data.y;
-  }
-};
-
-Clock.prototype.refrash = function() {
-  this.drawCircle();
-  this.drawPointer();
-};
-
-var canvasId = 'clock';
-var getSize = function() {
-  var elem = document.getElementById(canvasId);
-  return {
-    width: elem.clientWidth,
-    height: elem.clientWidth,
-  };
-};
-
-var init = function() {
-  var size = getSize();
-  var width = size.width;
-  var height = size.height;
-  
-  var canvas = new Canvas({
-    canvas: canvasId,
-    width: width,
-    height: height,
-    radio: window.devicePixelRatio || 1
-  });
-
-  var clock = new Clock({
-    Canvas: canvas,
-  });
-
-  setInterval(function() {
-    canvas.clear();
-    clock.refrash();
-  }, 1000);
-};
-
-// 页面加载完成后初始化
-if (document.addEventListener) {
-  document.addEventListener('DOMContentLoaded', function() {
-    init();
-  });
-} else {
-  window.onload = function() {
-    init();
-  };
-}
+      document.getElementById("toggleSeconds").addEventListener("change", function (e) {
+        showSeconds = e.target.checked;
+        updateClock();
+      });
+      document.getElementById("toggleDate").addEventListener("change", function (e) {
+        showDate = e.target.checked;
+        updateClock();
+      });
+      document.getElementById("toggleWeek").addEventListener("change", function (e) {
+        showWeek = e.target.checked;
+        updateClock();
+      });
+      document.getElementById("refresh").addEventListener("click", function () {
+        location.reload();
+      });
+      document.getElementById("about").addEventListener("click", function () {
+        window.location.href = "https://maemo.cc/";
+      });
+      document.getElementById("ringEffect").addEventListener("change", function (e) {
+        ring.classList.remove("breath", "rotate3d", "progress-ring");
+        ring.style.background = "";
+        ring.style.border = "6px solid #8FE3FF";
+        currentEffect = e.target.value;
+        if (currentEffect === "breath") {
+          ring.classList.add("breath");
+        } else if (currentEffect === "rotate3d") {
+          ring.classList.add("rotate3d");
+        } else if (currentEffect === "second") {
+          ring.classList.add("progress-ring");
+        }
+        updateClock();
+      });
     </script>
-</body>
+  </body>
 </html>
