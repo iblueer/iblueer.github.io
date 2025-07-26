@@ -35,12 +35,16 @@
         padding: 40px;
         width: 200px;
         height: 200px;
+        display: -webkit-box;
         display: -webkit-flex;
         display: flex;
+        -webkit-box-pack: center;
         -webkit-justify-content: center;
         justify-content: center;
+        -webkit-box-align: center;
         -webkit-align-items: center;
         align-items: center;
+        -webkit-box-orient: vertical;
         -webkit-flex-direction: column;
         flex-direction: column;
       }
@@ -249,10 +253,16 @@
       var ring = document.getElementById("ring");
       var currentEffect = "none";
 
-      document.body.addEventListener("click", function (e) {
+      function toggleMenu(e) {
         if (menu.contains(e.target)) return;
-        menu.classList.toggle("show");
-      });
+        if (menu.className.indexOf("show") > -1) {
+          menu.className = menu.className.replace(" show", "");
+        } else {
+          menu.className += " show";
+        }
+      }
+      document.body.addEventListener("click", toggleMenu, false);
+      document.body.addEventListener("touchend", toggleMenu, false);
 
       document.getElementById("toggleSeconds").addEventListener("change", function (e) {
         showSeconds = e.target.checked;
