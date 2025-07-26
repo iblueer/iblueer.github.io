@@ -18,6 +18,7 @@
         src: url("./fonts/DIN-Light-2.otf") format("opentype");
       }
 
+      html,
       body {
         background-color: #000000;
         color: #ffffff;
@@ -50,6 +51,7 @@
       }
 
       .info-line {
+        font-family: "DIN Light", Helvetica, Arial, sans-serif;
         font-size: 16px;
         line-height: 20px;
         height: 20px;
@@ -157,26 +159,67 @@
 
       .menu {
         position: fixed;
+        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.5);
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        align-items: center;
         color: #fff;
-        padding: 10px;
-        font-size: 16px;
         display: none;
       }
 
       .menu.show {
-        display: block;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
       }
 
-      .menu label,
-      .menu button,
-      .menu select {
+      .menu-panel {
+        position: relative;
+        background: rgba(34, 34, 34, 0.95);
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 280px;
+        font-size: 18px;
+      }
+
+      .close-button {
+        background: none;
+        background: transparent; /* for iOS6 browser compatibility */
+        border: none;
+        color: #fff;
+      }
+
+      .settings-button {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: none;
+        background: transparent; /* for iOS6 browser compatibility */
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        z-index: 3;
+      }
+
+      .menu-panel label,
+      .menu-panel button,
+      .menu-panel select {
         display: block;
         width: 100%;
-        margin: 5px 0;
+        margin: 8px 0;
+        font-size: 18px;
+      }
+
+      .menu-panel button {
+        padding: 8px 0;
       }
 
       .progress-ring {
@@ -187,6 +230,7 @@
     </style>
   </head>
   <body>
+    <button id="openMenu" class="settings-button">⚙️</button>
     <div class="clock-container">
       <div id="date" class="info-line"></div>
       <div id="clock"></div>
@@ -195,19 +239,22 @@
     </div>
 
     <div id="menu" class="menu">
-      <label
-        >圆环效果:
-        <select id="ringEffect">
-          <option value="none">无</option>
-          <option value="breath">呼吸</option>
-          <option value="rotate3d">立体旋转</option>
-        </select>
-      </label>
-      <label><input type="checkbox" id="toggleSeconds" /> 是否显示秒钟？</label>
-      <label><input type="checkbox" id="toggleDate" /> 是否显示日期？</label>
-      <label><input type="checkbox" id="toggleWeek" /> 是否显示星期？</label>
-      <button id="refresh">刷新页面</button>
-      <button id="about">关于作者</button>
+      <div class="menu-panel">
+        <label
+          >圆环效果:
+          <select id="ringEffect">
+            <option value="none">无</option>
+            <option value="breath">呼吸</option>
+            <option value="rotate3d">立体旋转</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="toggleSeconds" /> 是否显示秒钟？</label>
+        <label><input type="checkbox" id="toggleDate" /> 是否显示日期？</label>
+        <label><input type="checkbox" id="toggleWeek" /> 是否显示星期？</label>
+        <button id="refresh">刷新页面</button>
+        <button id="about">关于作者</button>
+        <button id="closeMenu" class="close-button">❌</button>
+      </div>
     </div>
 
     <script>
@@ -253,16 +300,35 @@
       var ring = document.getElementById("ring");
       var currentEffect = "none";
 
-      function toggleMenu(e) {
-        if (menu.contains(e.target)) return;
-        if (menu.className.indexOf("show") > -1) {
-          menu.className = menu.className.replace(" show", "");
-        } else {
+      function openMenu() {
+        if (menu.className.indexOf("show") === -1) {
           menu.className += " show";
         }
       }
-      document.body.addEventListener("click", toggleMenu, false);
-      document.body.addEventListener("touchend", toggleMenu, false);
+
+      function closeMenu() {
+        menu.className = menu.className.replace(" show", "");
+      }
+
+      document.getElementById("openMenu").addEventListener(
+        "touchend",
+        function (e) {
+          e.preventDefault();
+          openMenu();
+        },
+        false
+      );
+      document.getElementById("openMenu").addEventListener("click", openMenu);
+
+      document.getElementById("closeMenu").addEventListener(
+        "touchend",
+        function (e) {
+          e.preventDefault();
+          closeMenu();
+        },
+        false
+      );
+      document.getElementById("closeMenu").addEventListener("click", closeMenu);
 
       document.getElementById("toggleSeconds").addEventListener("change", function (e) {
         showSeconds = e.target.checked;
