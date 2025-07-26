@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html manifest="cache.manifest">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="时钟" />
-    <link rel="apple-touch-icon" href="./icons/clock-icon.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="./icons/clock-icon-76.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="./icons/clock-icon-120.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="./icons/clock-icon-152.png" />
-    <link rel="apple-touch-startup-image" href="./icons/clock-startup.png" />
+    <link rel="apple-touch-icon" href="./img/icons/clock-icon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="./img/icons/clock-icon-76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="./img/icons/clock-icon-120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="./img/icons/clock-icon-152.png" />
+    <link rel="apple-touch-startup-image" href="./img/icons/clock-startup.png" />
     <title>数字时钟</title>
     <style>
       @font-face {
@@ -18,14 +18,11 @@
         src: url("./fonts/DIN-Light-2.otf") format("opentype");
       }
 
-      html,
       body {
         background-color: #000000;
         color: #ffffff;
         margin: 0;
-        height: 100%;
-        /* fallback for old iOS */
-        min-height: 100vh;
+        height: 100vh;
         position: relative;
       }
 
@@ -38,17 +35,9 @@
         padding: 40px;
         width: 200px;
         height: 200px;
-        display: -webkit-box;
-        display: -webkit-flex;
         display: flex;
-        -webkit-box-pack: center;
-        -webkit-justify-content: center;
         justify-content: center;
-        -webkit-box-align: center;
-        -webkit-align-items: center;
         align-items: center;
-        -webkit-box-orient: vertical;
-        -webkit-flex-direction: column;
         flex-direction: column;
       }
 
@@ -65,7 +54,7 @@
         text-align: center;
         z-index: 2;
         position: relative;
-        line-height: 200px;
+        line-height: 1;
         margin: 0;
         -webkit-backface-visibility: hidden;
         -webkit-transform: translateZ(0);
@@ -89,16 +78,6 @@
       }
 
       /* ring effects */
-      @-webkit-keyframes breath {
-        0%,
-        100% {
-          box-shadow: 0 0 8px rgba(143, 227, 255, 0.3), inset 0 0 8px rgba(143, 227, 255, 0.3);
-        }
-        50% {
-          box-shadow: 0 0 20px rgba(143, 227, 255, 0.8), inset 0 0 20px rgba(143, 227, 255, 0.8);
-        }
-      }
-
       @keyframes breath {
         0%,
         100% {
@@ -110,26 +89,7 @@
       }
 
       .breath {
-        -webkit-animation: breath 3s ease-in-out infinite;
         animation: breath 3s ease-in-out infinite;
-      }
-
-      @-webkit-keyframes rotate3d {
-        0% {
-          -webkit-transform: rotateX(0deg) rotateY(180deg);
-        }
-        25% {
-          -webkit-transform: rotateX(45deg) rotateY(135deg);
-        }
-        50% {
-          -webkit-transform: rotateX(90deg) rotateY(90deg);
-        }
-        75% {
-          -webkit-transform: rotateX(135deg) rotateY(45deg);
-        }
-        100% {
-          -webkit-transform: rotateX(180deg) rotateY(0deg);
-        }
       }
 
       @keyframes rotate3d {
@@ -151,67 +111,33 @@
       }
 
       .rotate3d {
-        -webkit-animation: rotate3d 6s linear infinite;
         animation: rotate3d 6s linear infinite;
         transform-origin: 50% 50%;
-        -webkit-backface-visibility: visible;
         backface-visibility: visible; /* 让背面也显示出来 */
       }
 
       .menu {
         position: fixed;
-        top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        -webkit-box-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -webkit-align-items: center;
-        align-items: center;
+        background: rgba(0, 0, 0, 0.8);
         color: #fff;
+        padding: 10px;
+        font-size: 16px;
         display: none;
       }
 
       .menu.show {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: flex;
+        display: block;
       }
 
-      .menu-panel {
-        position: relative;
-        background: rgba(34, 34, 34, 0.95);
-        padding: 20px;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 280px;
-        font-size: 18px;
-      }
-
-      .close-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 24px;
-      }
-
-      .menu-panel label,
-      .menu-panel button,
-      .menu-panel select {
+      .menu label,
+      .menu button,
+      .menu select {
         display: block;
         width: 100%;
-        margin: 8px 0;
-        font-size: 18px;
-      }
-
-      .menu-panel button {
-        padding: 8px 0;
+        margin: 5px 0;
       }
 
       .progress-ring {
@@ -230,22 +156,20 @@
     </div>
 
     <div id="menu" class="menu">
-      <div class="menu-panel">
-        <button id="closeMenu" class="close-button">×</button>
-        <label
-          >圆环效果:
-          <select id="ringEffect">
-            <option value="none">无</option>
-            <option value="breath">呼吸</option>
-            <option value="rotate3d">立体旋转</option>
-          </select>
-        </label>
-        <label><input type="checkbox" id="toggleSeconds" /> 是否显示秒钟？</label>
-        <label><input type="checkbox" id="toggleDate" /> 是否显示日期？</label>
-        <label><input type="checkbox" id="toggleWeek" /> 是否显示星期？</label>
-        <button id="refresh">刷新页面</button>
-        <button id="about">关于作者</button>
-      </div>
+      <label
+        >圆环效果:
+        <select id="ringEffect">
+          <option value="none">无</option>
+          <option value="breath">呼吸</option>
+          <option value="rotate3d">立体旋转</option>
+          <option value="second">秒钟进度</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="toggleSeconds" /> 是否显示秒钟？</label>
+      <label><input type="checkbox" id="toggleDate" /> 是否显示日期？</label>
+      <label><input type="checkbox" id="toggleWeek" /> 是否显示星期？</label>
+      <button id="refresh">刷新页面</button>
+      <button id="about">关于作者</button>
     </div>
 
     <script>
@@ -280,7 +204,10 @@
         }
 
         if (currentEffect === "second") {
-          /* 秒钟进度效果在旧版 iOS Safari 中不受支持 */
+          var angle = ((now.getSeconds() + now.getMilliseconds() / 1000) / 60) * 360;
+          ring.style.background = "conic-gradient(#8FE3FF " + angle + "deg, rgba(143,227,255,0.1) 0deg)";
+          ring.style.border = "none";
+          ring.classList.add("progress-ring");
         }
       }
 
@@ -291,60 +218,10 @@
       var ring = document.getElementById("ring");
       var currentEffect = "none";
 
-      var justOpened = false;
-      function openMenu() {
-        if (menu.className.indexOf("show") === -1) {
-          menu.className += " show";
-          justOpened = true;
-          setTimeout(function () {
-            justOpened = false;
-          }, 300);
-        }
-      }
-
-      function closeMenu() {
-        menu.className = menu.className.replace(" show", "");
-      }
-
-      document.body.addEventListener(
-        "click",
-        function () {
-          if (menu.className.indexOf("show") === -1) {
-            openMenu();
-          }
-        },
-        false
-      );
-      document.body.addEventListener(
-        "touchend",
-        function (e) {
-          if (menu.className.indexOf("show") === -1) {
-            e.preventDefault();
-            openMenu();
-          }
-        },
-        false
-      );
-      function menuHandler(e) {
-        if (justOpened) {
-          e.stopPropagation();
-          e.preventDefault();
-          return;
-        }
-        if (e.target === menu || e.target.id === "closeMenu") {
-          closeMenu();
-        }
-        e.stopPropagation();
-      }
-      menu.addEventListener("click", menuHandler);
-      menu.addEventListener(
-        "touchstart",
-        function (e) {
-          menuHandler(e);
-          e.preventDefault();
-        },
-        false
-      );
+      document.body.addEventListener("click", function (e) {
+        if (menu.contains(e.target)) return;
+        menu.classList.toggle("show");
+      });
 
       document.getElementById("toggleSeconds").addEventListener("change", function (e) {
         showSeconds = e.target.checked;
@@ -374,7 +251,7 @@
         } else if (currentEffect === "rotate3d") {
           ring.classList.add("rotate3d");
         } else if (currentEffect === "second") {
-          /* 秒钟进度效果在旧版 iOS Safari 中不受支持 */
+          ring.classList.add("progress-ring");
         }
         updateClock();
       });
