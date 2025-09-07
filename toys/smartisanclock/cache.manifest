@@ -1,0 +1,12 @@
+CACHE MANIFEST
+# v5
+CACHE:
+index.html
+icons/clock-icon.png
+icons/clock-icon-76.png
+icons/clock-icon-120.png
+icons/clock-icon-152.png
+icons/clock-startup.png
+fonts/DIN-Light-2.otf
+NETWORK:
+*
