@@ -1,2 +1,5 @@
 
 *.icloud
+
+# macOS
+.DS_Store
